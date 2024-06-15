@@ -25,7 +25,25 @@ const registerUser = asyncHandler(async (req, res, next) => {
   });
   res.status(201).json({
     success: true,
-    user,
+    message: `Welcome ${user.userName}`,
   });
 });
-export { registerUser };
+const loginUser = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Please enter all fields", 400));
+  }
+  const user = await userModel.findOne({ email }).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("Invalid email or password", 401));
+  }
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler("Invalid email or password", 401));
+  }
+  res.status(200).json({
+    success: true,
+    message: `Welcome back ${user.userName}`,
+  });
+});
+export { registerUser, loginUser };
