@@ -31,13 +31,15 @@ const projectSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  images: {
-    type: [String],
-    required: true,
-  },
-  amenities: {
-    type: [String],
-    required: true,
+  image: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   status: {
     type: String,
