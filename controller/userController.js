@@ -4,6 +4,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/Jwt.js";
 import setToken from "../utils/setToken.js";
+import { forget } from "../utils/forgetPassword.js";
 
 const registerUser = asyncHandler(async (req, res, next) => {
   const { userName, email, password } = req.body;
@@ -86,4 +87,16 @@ const getMyProfile = asyncHandler(async (req, res, next) => {
     createdAt: user.createdAt,
   });
 });
-export { registerUser, loginUser, logoutUser, getMyProfile };
+
+const forgetPassword = asyncHandler(async (req, res, next) => {
+  const user = await userModel.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  forget(user);
+  res.status(200).json({
+    success: true,
+    message: "Email sent successfully",
+  });
+});
+export { registerUser, loginUser, logoutUser, getMyProfile, forgetPassword };

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  forgetPassword,
   getMyProfile,
   loginUser,
   logoutUser,
@@ -13,4 +14,5 @@ router.route("/create").post(registerUser, fileUpload);
 router.route("/login").post(loginUser);
 router.route("/logout").post(isAuthenticated, logoutUser);
 router.route("/profile").get(isAuthenticated, getMyProfile);
+router.route("/forgetpassword").post(forgetPassword);
 export default router;
