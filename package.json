@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ayanhasnain03/ethupia-server2024#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.2.0",
     "cookie-parser": "^1.4.6",
     "crypto": "^1.0.1",
     "datauri": "^4.1.0",

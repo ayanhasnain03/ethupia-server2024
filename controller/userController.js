@@ -6,8 +6,10 @@ import generateToken from "../utils/Jwt.js";
 import setToken from "../utils/setToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
-// Register User
+import getDataUri from "../utils/dataUri.js";
+import cloudinary from "cloudinary";
 const registerUser = asyncHandler(async (req, res, next) => {
+  const file = req.file;
   const { userName, email, password } = req.body;
 
   // Check if user already exists
@@ -24,15 +26,16 @@ const registerUser = asyncHandler(async (req, res, next) => {
   // Hash the password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
+  const fileUri = getDataUri(file);
+  const myCloud = await cloudinary.v2.uploader.upload(fileUri.content);
 
-  // Create new user
   const user = await userModel.create({
     userName,
     email,
     password: hashedPassword,
     avatar: {
-      public_id: "sample_id",
-      url: "sample_url",
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
     },
     role: "user",
   });
