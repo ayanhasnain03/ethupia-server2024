@@ -72,22 +72,18 @@ const logoutUser = asyncHandler(async (req, res, next) => {
     });
 });
 const getMyProfile = asyncHandler(async (req, res, next) => {
-  try {
-    const user = await userModel.findById(req.user);
-    if (!user) {
-      throw new ErrorHandler("User not found", 404);
-    }
-    return res.status(200).json({
-      _id: user._id,
-      username: user.userName,
-      email: user.email,
-      gender: user.gender,
-      role: user.role,
-      avatar: user.avatar.url,
-      createdAt: user.createdAt,
-    });
-  } catch (error) {
-    next(error);
+  const user = await userModel.findById(req.user);
+  if (!user) {
+    throw new ErrorHandler("User not found", 404);
   }
+  return res.status(200).json({
+    _id: user._id,
+    username: user.userName,
+    email: user.email,
+    gender: user.gender,
+    role: user.role,
+    avatar: user.avatar.url,
+    createdAt: user.createdAt,
+  });
 });
 export { registerUser, loginUser, logoutUser, getMyProfile };
