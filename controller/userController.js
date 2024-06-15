@@ -30,6 +30,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
   });
 
   const token = generateToken(user);
+  setToken(token, res);
   res.status(201).json({
     success: true,
     message: `Welcome ${user.userName}`,
@@ -55,4 +56,10 @@ const loginUser = asyncHandler(async (req, res, next) => {
     message: `Welcome back ${user.userName}`,
   });
 });
-export { registerUser, loginUser };
+const logoutUser = asyncHandler(async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});
+export { registerUser, loginUser, logoutUser };

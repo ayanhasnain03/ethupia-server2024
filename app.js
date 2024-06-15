@@ -5,7 +5,7 @@ import connectDB from "./config/db.js";
 import ErrorMiddleware from "./middleware/errorMiddleware.js";
 
 import userRoute from "./routes/userRoute.js";
-
+import cookieParser from "cookie-parser";
 //config
 config({ path: "./config/config.env" });
 connectDB();
@@ -13,7 +13,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 app.use("/api/user", userRoute);
 
 app.listen(process.env.PORT, () => {
