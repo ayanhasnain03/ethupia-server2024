@@ -3,6 +3,7 @@ import userModel from "../model/userModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/Jwt.js";
+import setToken from "../utils/setToken.js";
 const registerUser = asyncHandler(async (req, res, next) => {
   const { userName, email, password } = req.body;
   if (role && role === "admin") {
@@ -27,6 +28,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
       url: "sample_url",
     },
   });
+
+  const token = generateToken(user);
   res.status(201).json({
     success: true,
     message: `Welcome ${user.userName}`,
@@ -46,7 +49,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
   const token = generateToken(user);
-
+  setToken(token, res);
   res.status(200).json({
     success: true,
     message: `Welcome back ${user.userName}`,
