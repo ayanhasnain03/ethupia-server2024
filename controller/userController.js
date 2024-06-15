@@ -2,8 +2,12 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import userModel from "../model/userModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import bcrypt from "bcryptjs";
+import generateToken from "../utils/Jwt.js";
 const registerUser = asyncHandler(async (req, res, next) => {
   const { userName, email, password } = req.body;
+  if (role && role === "admin") {
+    return res.status(403).send("Cannot register as admin");
+  }
   const userAlreadyExist = await userModel.findOne({ email });
   if (userAlreadyExist) {
     return next(new ErrorHandler("User already exist", 400));
@@ -41,6 +45,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
+  const token = generateToken(user);
+
   res.status(200).json({
     success: true,
     message: `Welcome back ${user.userName}`,
