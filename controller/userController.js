@@ -27,7 +27,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   const fileUri = getDataUri(file);
-  const myCloud = await cloudinary.v2.uploader.upload(fileUri.content);
+  const myCloud = await cloudinary.v2.uploader.upload(fileUri.content, {
+    folder: "ethupia",
+  });
 
   const user = await userModel.create({
     userName,
@@ -83,6 +85,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: `Welcome back ${user.userName}`,
+    user,
   });
 });
 const logoutUser = asyncHandler(async (req, res, next) => {
@@ -100,18 +103,11 @@ const logoutUser = asyncHandler(async (req, res, next) => {
     });
 });
 const getMyProfile = asyncHandler(async (req, res, next) => {
-  const user = await userModel.findById(req.user);
-  if (!user) {
-    throw new ErrorHandler("User not found", 404);
-  }
+  const user = await userModel.findById(req.user._id);
+  console.log(user);
   return res.status(200).json({
-    _id: user._id,
-    username: user.userName,
-    email: user.email,
-    gender: user.gender,
-    role: user.role,
-    avatar: user.avatar.url,
-    createdAt: user.createdAt,
+    success: true,
+    user,
   });
 });
 
